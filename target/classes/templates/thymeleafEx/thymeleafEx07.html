@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/html"
+      layout:decorate="~{layouts/layout1}"> <!-- ~:home directory /  -->
+    <!-- layout에 적용될 뷰      ↓ 해당위치의 html을 불러와 틀?로 사용-->
+    <!-- layou1에 적용될 layout content      │-->
+    <!-- 조각으로 들어갈 내용만 있으면 됨 <─────┘-->
+    <div layout:fragment="content">
+        본문 영역 입니다.
+    </div>
+
+    <th:block layout:fragment="css">
+        <style>
+            div {
+                background: #dc9797;
+            }
+        </style>
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script>
+            console.log("페이지 전용 스크립트");
+        </script>
+    </th:block>
+
+
+
+</html>

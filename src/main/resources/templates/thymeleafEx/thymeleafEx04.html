@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- thymleaf 사용한다고 표기해줌 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>상품 데이터 출력 예제4</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <td>순번</td>
+                <td>상품명</td>
+                <td>상품설명</td>
+                <td>가격</td>
+                <td>상품등록일</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="itemDto, status:${itemDtoList}">
+                <!-- if-unless -->
+<!--                <td th:if="${status.even}" th:text="짝수"></td>-->
+<!--                <td th:unless="${status.even}" th:text="홀수"></td> &lt;!&ndash; unless: if 아닐때 &ndash;&gt;-->
+                <!-- switch-case -->
+                <td th:switch="${status.even}">
+                    <span th:case=true>짝수</span> <!--속성 명시를 위해 span태그 사용-->
+                    <th:block th:case=false>홀수</th:block> <!--서버에서 뷰로 통할때만 유효함(그 외는 th태그 삭제됨)-->
+                    <!--태그 사용 요소만 남고 태그는 사라짐 -> 확인해보면 td태그 내에 텍스트가 들어가있음-->
+                </td>
+                <td th:text="${itemDto.itemName}"></td>
+                <td th:text="${itemDto.itemDetail}"></td>
+                <td th:text="${itemDto.price}"></td>
+                <td th:text="${itemDto.regTime}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
