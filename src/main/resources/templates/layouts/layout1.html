@@ -17,13 +17,13 @@
 </head>
 <body>
     <!-- header -->      <!--파일경로<┐┌>th fragment로 준 이름-->
-    <div th:replace="fragments/header::header"></div>
+    <div th:replace="~{fragments/header::header}"></div>
     <!-- contents -->
     <div layout:fragment="content" class="content">
         <!-- 여기로 들어옴 -->
     </div>
     <!-- footer -->
-    <div th:replace="fragments/footer::footer"></div>
+    <div th:replace="~{fragments/footer::footer}"></div>
     <th:block layout:fragment="script"></th:block>
 </body>
 </html>
