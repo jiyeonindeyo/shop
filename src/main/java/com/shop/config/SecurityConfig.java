@@ -1,9 +1,11 @@
 package com.shop.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +34,28 @@ public class SecurityConfig {
                             .logoutUrl("/members/logout")
                             .logoutSuccessUrl("/")
         );
+
+        //권한별 가능 url검색(url별 admin/user 구분)
+        http.authorizeHttpRequests(auth -> auth  //┌>뒤에 오는 모든것들 포함
+                            .requestMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                            .requestMatchers("/admin/**").hasRole("ADMIN")
+                            .anyRequest().authenticated()
+        );
+
+        http.exceptionHandling((e) -> e
+                            .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) //인증
+                            .accessDeniedHandler(new CustomAccessDeniedHandler()) //인가
+        );
+
         return http.build();
+    }
+
+    //화면을 정상적으로 그리는데 필요한 정적인 자원들 허용
+    //특별히 보안적인 고려사항이 없는 웹 전용 자원들 必
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     // 데이터 암호화
@@ -40,5 +63,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
