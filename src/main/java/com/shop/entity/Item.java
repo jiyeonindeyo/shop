@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Item {
+public class Item extends BaseEntity {
     @Id //PK설정
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment option
@@ -35,7 +35,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
+    //BaseTimeEntity 상속으로 동일한 필드명 존재하므로 삭제
+//    private LocalDateTime regTime;
+//    private LocalDateTime updateTime;
 }

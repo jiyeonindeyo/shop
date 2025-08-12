@@ -8,18 +8,18 @@ import lombok.Setter;
 @Table(name = "cart_item")
 @Getter
 @Setter
-public class CartItem {
+public class CartItem extends BaseTimeEntity {
 
     @Id
     @Column(name = "cart_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne //Many:CartItm(현재 클래스), One:Cart(필드 클래스)
+    @ManyToOne(fetch = FetchType.LAZY) //Many:CartItm(현재 클래스), One:Cart(필드 클래스)
     @JoinColumn(name = "cart_id") //join할 컬럼명이 똑같은지 확인!
     private Cart cart;
 
-    @ManyToOne //Many:CartItm, One:Item
+    @ManyToOne(fetch = FetchType.LAZY) //Many:CartItm, One:Item
     @JoinColumn(name = "item_id")
     private Item item;
 
