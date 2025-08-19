@@ -17,7 +17,6 @@ public class Cart extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     // member 테이블의 member_id(PK)를 참조하는 cart 테이블의 member_id(FK)
     // └> private Long member_id -> 이렇게 표현X   부모 테이블의 컬럼명과 일치 해야함 <──┐
     // One To One -> 앞의 one과 뒤의 one을 구분해주어야함 / unique                    ㅣ

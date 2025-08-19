@@ -8,6 +8,8 @@
     <form method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
                                                 <!--이제부터 들어갈 form 구성을 itemFormDto로 정함-->
         <p class="h2">상품등록</p> <hr>
+        <input type="hidden" th:field="*{id}">
+
         <div class="form-group">
             <select th:field="*{itemSellStatus}" class="form-select mb-3">
                 <option value="SELL">판매중</option>
@@ -47,14 +49,27 @@
         <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError"></p>
 
         <!-- file input -->
-        <div class="input-group img-div" th:each="num: ${#numbers.sequence(1,5)}">
-            <input type="file" class="form-control" name="itemImgFile">
-                            <!--  numbers.sequence에서 나온 값(1~5) <┐ -->
-            <label class="input-group-text" th:text="상품이미지 + ${num}"></label>
+        <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}"> <!-- 상품이미지 비어있을 때 : 등록 -->
+            <div class="input-group img-div" th:each="num: ${#numbers.sequence(1,5)}">
+                <input type="file" class="form-control file-input" name="itemImgFile">
+                                <!--  numbers.sequence에서 나온 값(1~5) <┐ -->
+                <label class="input-group-text" th:text="상품이미지 + ${num}"></label>
+            </div>
+        </div>
+        <div th:if="${not #lists.isEmpty(itemFormDto.itemImgDtoList)}"> <!-- 상품이미지 존재할때 : 수정 -->
+            <div class="input-group img-div" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}"> <!--List 사이즈만큼 반복-->
+                <input type="file" class="form-control file-input" name="itemImgFile">
+                <input type="hidden" name="itemImgIds" th:value="${itemImgDto.id}">
+                <label class="input-group-text" th:text="${not #strings.isEmpty(itemImgDto.oriImgName)} ?
+                                                         ${itemImgDto.oriImgName} : '상품이미지' + ${status.index+1}"></label>
+            </div>
         </div>
 
-        <div style="text-align: center">
+        <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
             <button th:formaction="@{/admin/item/new}" type="submit" class="btn btn-primary">저장</button>
+        </div>
+        <div th:unless="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
+            <button th:formaction="@{'/admin/item/' + ${itemFormDto.id}}" type="submit" class="btn btn-primary">수정</button>
         </div>
 
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.getToken()}">
@@ -76,8 +91,26 @@
 </th:block>
 
 <th:block layout:fragment="script">
-    <script>
-        console.log("페이지 전용 스크립트");
+    <script th:inline="javascript">
+        $(document).ready(() => {
+            var errorMessage = [[${errorMessage}]];
+            if (errorMessage != null) {
+                alert(errorMessage);
+            }
+            // ↓ 동적 객체 가져오기
+            $(".file-input").on("change", (e) => {
+               // file명 = this.value -> 확장자 분리 -> 검사
+                var fileName = $(e.target).val().split("\\").pop(); //    ┌> .없이 확장자만 출력하기 위해 +1 해줬음
+                var fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+                fileExt = fileExt.toLowerCase();
+                if (fileExt != "jpg" && fileExt != "jpeg" && fileExt != "gif"
+                    && fileExt != "png" && fileExt != "bmp") {
+                    alert("이미지 파일만 등록이 가능합니다.");
+                    $(e.target).val("");
+                }
+            });
+
+        });
     </script>
 </th:block>
 

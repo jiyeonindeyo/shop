@@ -6,7 +6,7 @@
     <link th:href="@{/css/layout1.css}" rel="stylesheet">
     <!--부트 스트랩-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <!-- 태그 흔적 없애면서 타임리프 사용하고싶을때 -->
+    <!-- 태그 흔적 없애면서 타임리프 사용하고싶을때 <th:block></th:block> -->
     <th:block layout:fragment="css"></th:block>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
@@ -14,6 +14,8 @@
         /*공통 스크립트 입니다.*/
         console.log("공통 스크립트");
     </script>
+    <meta name="_csrf" th:content="${_csrf.getToken()}"/>
+    <meta name="_csrf_header" th:content="${_csrf.getHeaderName()}"/>
 </head>
 <body>
     <!-- header -->      <!--파일경로<┐┌>th fragment로 준 이름-->

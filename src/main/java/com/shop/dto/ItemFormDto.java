@@ -3,8 +3,10 @@ package com.shop.dto;
 import com.shop.constant.ItemSellStatus;
 import com.shop.entity.Item;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class ItemFormDto {
 
     private Long id;
@@ -19,30 +22,30 @@ public class ItemFormDto {
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private String itemNm;
 
-    @NotBlank(message = "가격은 필수 입력 값입니다.")
+    @NotNull(message = "가격은 필수 입력 값입니다.")
     private Integer price;
 
     @NotBlank(message = "상품 설명은 필수 입력 값입니다.")
     private String itemDetail;
 
-    @NotBlank(message = "재고는 필수 입력 값입니다.")
+    @NotNull(message = "재고는 필수 입력 값입니다.")
     private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;
 
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
+    private List<Long> itemImgIds = new ArrayList<>();
+
     private static ModelMapper modelMapper = new ModelMapper();
 
-    // Entity ->(to)-> Dto Mapper
+    // Entity -(to)-> Dto Mapper
     public static ItemFormDto of(Item item) {
         return modelMapper.map(item, ItemFormDto.class);
     }
 
-    // Dto ->(to)-> Entity Mapper
+    // Dto -(to)-> Entity Mapper
     public Item createItem() {
         return modelMapper.map(this, Item.class);
     }
-
-
 }

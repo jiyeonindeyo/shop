@@ -21,5 +21,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations(uploadPath);
         //EX1) 1. http GET /images/abc.jpg ━▶ 2. C:/shop/abc.jpg 자원(사진)을 직접 응답
         //EX2) 1. http GET /images/abc.png ━▶ 2. C:/shop/abc.png 자원(사진)을 직접 응답
+         // (localhost/images/이미지명.타입) ━▶ (application.properties에 uploadPath로 저장한 경로로가서 입력한 이미지를 찾아서 보여줌)
     }
 }

@@ -1,5 +1,9 @@
+com\shop\entity\QMember.class
 com\shop\entity\QItem.class
-com\shop\ShopApplication.class
-com\shop\repository\ItemRepository.class
-com\shop\constant\ItemSellStatus.class
-com\shop\entity\Item.class
+com\shop\entity\QOrderItem.class
+com\shop\entity\QCartItem.class
+com\shop\entity\QBaseEntity.class
+com\shop\entity\QOrder.class
+com\shop\entity\QItemImg.class
+com\shop\entity\QBaseTimeEntity.class
+com\shop\entity\QCart.class

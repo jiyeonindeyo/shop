@@ -31,4 +31,17 @@ public class OrderItem extends BaseTimeEntity {
     //BaseTimeEntity 상속으로 동일한 필드명 존재하므로 삭제
 //    private LocalDateTime regTime;
 //    private LocalDateTime updateTime;
+
+    public static OrderItem createOrderItem(Item item, int count) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setCount(count);
+        orderItem.setOrderPrice(item.getPrice());
+        item.removeStock(count);
+        return orderItem;
+    }
+
+    public int getTotalPrice() {
+        return this.orderPrice * count;
+    }
 }
