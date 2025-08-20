@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +65,33 @@ public class OrderService {
             orderHistDtoList.add(orderHistDto);
         }
         return new PageImpl<>(orderHistDtoList, pageable, totalCount);
+    }
+
+    public void cancelOrder(Long orderId) {
+        //orderId가 같은 Order 엔티티를 조회해서 cancelOrder() 호출
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
+    }
+
+    public Boolean validateOrder(Long orderId, String email) {
+        // orderId로 조회된 Order 엔티티의 member.email과 매개변수로 받은 email이 같은지 체크(확인)
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        return StringUtils.equals(email, order.getMember().getEmail());
+    }
+
+    public Long orders(List<OrderDto> orderDtoList, String email){
+        Member member = memberRepository.findByEmail(email);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        for (OrderDto orderDto : orderDtoList) {
+            Item item = itemRepository.findById(orderDto.getItemId())
+                                      .orElseThrow(EntityNotFoundException::new);
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+            orderItemList.add(orderItem);
+        }
+
+        Order order = Order.createOrder(member, orderItemList);
+        // 5. Order 엔티티 저장 -> OrderItem 엔티티 저장
+        orderRepository.save(order);
+        return order.getId();
     }
 }

@@ -42,7 +42,7 @@ public class OrderController {
                   .append(fieldError.getDefaultMessage())
                   .append("\n");
             }
-            return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST); //400
         }
         Long orderId = null;
         try {
@@ -65,4 +65,20 @@ public class OrderController {
         return "order/orderHist";
     }
 
+    @PostMapping("/orders/{orderId}/cancel")
+     //     ┌> return 타입으로 ResponseEntity를 사용하면 @ResponseBody 생략해도 괜찮음
+    public ResponseEntity<?> cancelOrder(@PathVariable Long orderId,
+                                         Authentication authentication) {
+        if (!orderService.validateOrder(orderId, authentication.getName())) {
+            // 내 주문이 아닌데 주문하려고 한 경우 -> 주문취소 권한X
+            return new ResponseEntity<String>("주문 취소 권한이 없습니다.",
+                                                    HttpStatus.FORBIDDEN); // 403
+        }
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.ok().body(orderId);
+    }
+
 }
+
+
+

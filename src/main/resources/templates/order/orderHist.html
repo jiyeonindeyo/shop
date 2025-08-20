@@ -48,7 +48,7 @@
                     <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}" onclick="cancelOrder(this)">주문취소</button>
                 </th:block>
                 <th:block th:unless="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
-                    <h4>(취소 완료)</h4>
+                    <h4>(✖️취소 완료️️✖️)</h4>
                 </th:block>
             </div>
         </div>
@@ -92,7 +92,43 @@
 
 <th:block layout:fragment="script">
     <script>
-        console.log("페이지 전용 스크립트");
+        function cancelOrder(orderBtn) {
+            var orderId = orderBtn.value;
+
+            var token = $("meta[name='_csrf']").attr("content");
+            var headerName = $("meta[name='_csrf_header").attr("content");
+
+            var paramData = {
+                itemId : $("#itemId").val(),
+                count : $("#count").val()
+            };
+            // AJAX 시작
+            $.ajax({
+                //보낼 데이터
+                url : "/orders/" + orderId + "/cancel",
+                type : "POST",
+                //csrf 토큰
+                beforeSend : function (xhr){
+                    xhr.setRequestHeader(headerName, token) // xhr.setRequestHeader(헤더네임, 헤더값)
+                },
+                //받을 데이터
+                dataType : "json",
+                cache : false,
+                success : function(result, status) {
+                    alert("주문이 취소되었습니다.");
+                    $(orderBtn).parent().html("<h4>(✖️취소 완료️️✖️)</h4>")
+                },
+                //Error 처리
+                error : function (jqXHR, status, error){
+                    if (jqXHR.status == 401) {
+                        alert("로그인 후 이용해주세요.");
+                        location.href="/members/login";
+                    } else {
+                        alert(jqXHR.responseText);
+                    }
+                }
+            })
+        }
     </script>
 </th:block>
 </html>

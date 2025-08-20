@@ -23,6 +23,21 @@ public class CartItem extends BaseTimeEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private Integer count; //필드에 적을땐 랩퍼타입으로 함(원시 타입X) -> int(X) Integer(O)
+    private Integer count; //필드에 적을땐 wrapper type으로 함(원시 타입X) -> int(X) Integer(O)
 
+    public static CartItem createCartItem(Cart cart, Item item, Integer count) {
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setItem(item);
+        cartItem.setCount(count);
+        return cartItem;
+    }
+
+    public void addCount(Integer count) {
+        this.count += count;
+    }
+
+    public void updateCount(Integer count) {
+        this.count = count;
+    }
 }
